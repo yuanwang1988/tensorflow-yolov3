@@ -70,8 +70,8 @@ class YoloTest(object):
         image_data = utils.image_preporcess(image, [self.input_size, self.input_size])
         image_data = image_data[np.newaxis, ...]
 
-        _, gt_bboxes = DataSet('test').parse_annotation(annotation)
-        label_sbbox, label_mbbox, label_lbbox, sbboxes, mbboxes, lbboxes = self.preprocess_true_boxes(gt_bboxes)
+        _, gt_bboxes = Dataset('train').parse_annotation(annotation)
+        label_sbbox, label_mbbox, label_lbbox, sbboxes, mbboxes, lbboxes = Dataset('train').preprocess_true_boxes(gt_bboxes)
         label_sbbox = label_sbbox[np.newaxis, ...]
         label_mbbox = label_mbbox[np.newaxis, ...]
         label_lbbox = label_lbbox[np.newaxis, ...]
@@ -138,7 +138,7 @@ class YoloTest(object):
                         print('\t' + str(bbox_mess).strip())
                 print('=> predict result of %s:' % image_name)
                 predict_result_path = os.path.join(predicted_dir_path, str(num) + '.txt')
-                bboxes_pr, loss = self.predict(image)
+                bboxes_pr, loss = self.predict(image, line)
 
                 if self.write_image:
                     image = utils.draw_bbox(image, bboxes_pr, show_label=self.show_label)
@@ -159,6 +159,7 @@ class YoloTest(object):
                 loss_path = os.path.join(loss_dir_path, str(num) + '.txt')
                 with open(loss_path, 'w') as f:
                 	f.write(loss)
+                    print("loss: {}".format(loss))
 
 
 
